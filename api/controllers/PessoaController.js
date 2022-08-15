@@ -1,12 +1,26 @@
 const database = require('../models/index.js')
 
 class PessoaController {
+    static async pegarPessoasAtivas(req, res){
+        let response
+
+        try{
+            const pessoas = await database.Pessoas.findAll()
+            response = res.status(200).json(pessoas)
+        } catch(err){
+            response = res.status(500).json(err.message)
+        } finally{
+            return response
+        }
+
+    }
+
     static async pegarTodasAsPessoas(req, res){
         let response
 
         try{
-            const todasAsPessoas = await database.Pessoas.findAll()
-            response = res.status(200).json(todasAsPessoas)
+            const pessoas = await database.Pessoas.scope('todos').findAll()
+            response = res.status(200).json(pessoas)
         } catch(err){
             response = res.status(500).json(err.message)
         } finally{
