@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000
 routes(app)
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Servidor rodando na URL http://localhost:${port}`)
 })
 
 module.exports = app
