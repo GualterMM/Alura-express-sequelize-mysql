@@ -123,6 +123,28 @@ class TurmaController {
             return response
         }
     }
+
+    static async pegarMatriculasPorTurma(req, res){
+        const {turmaId} = req.params
+        let response
+
+        try{
+            const matriculas = await database.Matriculas.findAndCountAll({
+                where: {
+                    turma_id: Number(turmaId),
+                    status: 'confirmado'
+                },
+                limit: 20,
+                order: [['estudante_id', 'ASC']]
+            })
+            response = res.status(200).json(matriculas)
+        } catch(err){
+            response = res.status(400).json(err.message)
+        } finally{
+            return response
+        }
+
+    }
 }
 
 module.exports = TurmaController
