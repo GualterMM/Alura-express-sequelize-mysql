@@ -98,7 +98,25 @@ class PessoaController {
         }
     }
 
-    // http://localhost:3000/pessoas/:estudanteId/matricula/:matriculaId
+    static async restauraPessoaPorId(req, res){
+        const {id} = req.params
+        let response
+        
+        try{
+            await database.Pessoas.restore({
+                where:{
+                    id: Number(id)
+                }
+            })
+
+            response = res.status(200).json({"message:" : "Usuário restaurado"})
+        } catch(err){
+            response = res.status(500).json(err.message)
+        } finally{
+            return response
+        }
+    }
+
     static async pegarUmaMatriculaPorId(req, res){
         const {estudanteId, matriculaId} = req.params
         let response
