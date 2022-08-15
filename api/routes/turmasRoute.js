@@ -5,6 +5,7 @@ const router = Router()
 
 router
   .post('/turmas', TurmaController.criarTurma)
+  .get('/turmas', TurmaController.pegarTurmasPorIntervalo)
   .get('/turmas', TurmaController.pegarTodasAsTurmas)
   .get('/turmas/:id', TurmaController.pegarTurmaPorId)
   .put('/turmas/:id', TurmaController.atualizarTurmaPorId)

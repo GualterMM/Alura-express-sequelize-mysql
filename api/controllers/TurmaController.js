@@ -1,4 +1,5 @@
 const database = require("../models/index.js")
+const { Op } = require("sequelize");
 
 class TurmaController {
     static async criarTurma(req, res){
@@ -25,6 +26,25 @@ class TurmaController {
 
         try{
             const turmas = await database.Turmas.findAll()
+            response = res.status(200).json(turmas)
+        } catch(err){
+            response = res.status(500).json(err.message)
+        } finally {
+            return response
+        }
+
+    }
+
+    static async pegarTurmasPorIntervalo(req, res){
+        const { data_inicial, data_final } = req.query
+        const where = {}
+        data_inicial || data_final ? where.data_inicio = {} : null
+        data_inicial ? where.data_inicio[Op.gte] = data_inicial : null
+        data_final ? where.data_inicio[Op.lte] = data_final : null
+        let response
+
+        try{
+            const turmas = await database.Turmas.findAll({where})
             response = res.status(200).json(turmas)
         } catch(err){
             response = res.status(500).json(err.message)
