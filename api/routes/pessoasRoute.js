@@ -13,6 +13,7 @@ router
   .post('/pessoas/:id/restaura', PessoaController.restauraPessoaPorId)
   .post('/pessoas', PessoaController.criarPessoa)
   .put('/pessoas/:estudanteId/matricula/:matriculaId', PessoaController.atualizarMatriculaPorId)
+  .put('/pessoas/:estudanteId/cancela', PessoaController.desativarPessoaPorId)
   .put('/pessoas/:id', PessoaController.atualizarPessoaPorId)
   .delete('/pessoas/:estudanteId/matricula/:matriculaId', PessoaController.removerMatriculaPorId)
   .delete('/pessoas/:id', PessoaController.apagarPessoaPorId)
