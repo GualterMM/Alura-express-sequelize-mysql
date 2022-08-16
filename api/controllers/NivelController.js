@@ -1,17 +1,19 @@
 const database = require("../models/index.js")
+const NiveisServices = require('../services/Services')
+const niveisService = new NiveisServices('Niveis')
 
 class NivelController {
     static async criarNivel(req, res){
         const nivel = {
             ...req.body,
              createdAt: Date.now(),
-              updatedAt: Date.now()
+             updatedAt: Date.now()
             }
 
         let response
 
         try{
-            const novoNivel = await database.Niveis.create(nivel)
+            const novoNivel = await niveisService.criarRegistro(nivel)
             response = res.status(200).json(novoNivel)
         } catch(err){
             response = res.status(500).json(err.message)
@@ -24,7 +26,7 @@ class NivelController {
         let response
 
         try{
-            const niveis = await database.Niveis.findAll()
+            const niveis = await niveisService.pegarTodosOsRegistros()
             response = res.status(200).json(niveis)
         } catch(err){
             response = res.status(500).json(err.message)
@@ -39,11 +41,7 @@ class NivelController {
         let response
 
         try{
-            const nivel = await database.Niveis.findOne({
-                where: {
-                    id: Number(id)
-                }
-            })
+            const nivel = await niveisService.pegarUmRegistro(id)
 
             if(nivel !== null){
                 response = res.status(200).json(nivel)
@@ -64,11 +62,7 @@ class NivelController {
         let response
 
         try{
-            const atualizacao = await database.Niveis.update(nivel, {
-                where: {
-                    id: Number(id)
-                }
-            })
+            const atualizacao = await niveisService.atualizarRegistro(nivel, id)
 
             if(atualizacao !== 1){
                 response = res.status(200).json({"message": "Nível atualizado."})
@@ -89,12 +83,7 @@ class NivelController {
         let response
 
         try{
-            await database.Niveis.destroy({
-                where: {
-                    id: Number(id)
-                }
-            })
-
+            await niveisService.removerRegistro(id)
             response = res.status(200).json({"message": "Cadastro apagado com sucesso."})
             
         } catch(err){

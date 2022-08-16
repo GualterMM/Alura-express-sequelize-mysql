@@ -1,6 +1,8 @@
 const database = require("../models/index.js")
 const { Op } = require("sequelize");
 const Sequelize = require("sequelize")
+const { TurmasServices } = require("../services")
+const turmasServices = new TurmasServices
 
 class TurmaController {
     static async criarTurma(req, res){
@@ -13,7 +15,7 @@ class TurmaController {
         let response
 
         try{
-            const novaTurma = await database.Turmas.create(turma)
+            const novaTurma = await turmasServices.criarRegistro(turma)
             response = res.status(200).json(novaTurma)
         } catch(err){
             response = res.status(500).json(err.message)
@@ -26,7 +28,7 @@ class TurmaController {
         let response
 
         try{
-            const turmas = await database.Turmas.findAll()
+            const turmas = await turmasServices.pegarTodosOsRegistros()
             response = res.status(200).json(turmas)
         } catch(err){
             response = res.status(500).json(err.message)
@@ -45,7 +47,7 @@ class TurmaController {
         let response
 
         try{
-            const turmas = await database.Turmas.findAll({where})
+            const turmas = await turmasServices.pegarTodosOsRegistrosOnde(where)
             response = res.status(200).json(turmas)
         } catch(err){
             response = res.status(500).json(err.message)
@@ -60,11 +62,7 @@ class TurmaController {
         let response
 
         try{
-            const turma = await database.Turmas.findOne({
-                where: {
-                    id: Number(id)
-                }
-            })
+            const turma = await turmasServices.pegarUmRegistro(id)
 
             if(turma !== null){
                 response = res.status(200).json(turma)
@@ -85,11 +83,7 @@ class TurmaController {
         let response
 
         try{
-            const atualizacao = await database.Turmas.update(turma, {
-                where: {
-                    id: Number(id)
-                }
-            })
+            const atualizacao = await turmasServices.atualizarRegistro(turma, id)
 
             if(atualizacao !== 1){
                 response = res.status(200).json({"message": "Turma atualizada."})
@@ -110,11 +104,7 @@ class TurmaController {
         let response
 
         try{
-            await database.Turmas.destroy({
-                where: {
-                    id: Number(id)
-                }
-            })
+            await turmasServices.removerRegistro(id)
 
             response = res.status(200).json({"message": "Cadastro apagado com sucesso."})
             
