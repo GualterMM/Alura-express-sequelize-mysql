@@ -8,6 +8,7 @@ router
   .get('/turmas', TurmaController.pegarTurmasPorIntervalo)
   .get('/turmas', TurmaController.pegarTodasAsTurmas)
   .get('/turmas/:turmaId/matriculas/confirmadas', TurmaController.pegarMatriculasPorTurma)
+  .get('/turmas/matriculas/lotadas', TurmaController.pegarTurmasLotadas)
   .get('/turmas/:id', TurmaController.pegarTurmaPorId)
   .put('/turmas/:id', TurmaController.atualizarTurmaPorId)
   .delete('/turmas/:id', TurmaController.removerTurmaPorId)

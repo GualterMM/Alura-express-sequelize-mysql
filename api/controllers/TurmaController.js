@@ -1,5 +1,6 @@
 const database = require("../models/index.js")
 const { Op } = require("sequelize");
+const Sequelize = require("sequelize")
 
 class TurmaController {
     static async criarTurma(req, res){
@@ -144,6 +145,27 @@ class TurmaController {
             return response
         }
 
+    }
+
+    static async pegarTurmasLotadas(req, res){
+        const lotacaoTurma = 2
+        let response
+        try{
+            const turmasLotadas = await database.Matriculas.findAndCountAll({
+                where: {
+                    status: 'confirmado'
+                },
+                attributes: ['turma_id'],
+                group: ['turma_id'],
+                having: Sequelize.literal(`count(turma_id) >= ${lotacaoTurma}`)
+            })
+
+            response = res.status(200).json(turmasLotadas)
+        } catch (err) {
+            response = res.status(500).json(err.message)
+        } finally {
+            return response
+        }
     }
 }
 
