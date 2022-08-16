@@ -14,7 +14,7 @@ class Services {
     }
 
     async pegarUmRegistro(id){
-        return database[this.nomeDoModelo].findOne({ where: { id: id } })
+        return database[this.nomeDoModelo].findOne({ where: { id: Number(id) } })
     }
 
     async criarRegistro(dados){
@@ -24,7 +24,7 @@ class Services {
     async atualizarRegistro(dadosAtualizados, id, transacao = {}){
         return database[this.nomeDoModelo]
         .update(dadosAtualizados, {
-            where: { id: id },
+            where: { id: Number(id) },
             transacao
         })
     }
@@ -38,7 +38,11 @@ class Services {
     }
 
     async removerRegistro(id){
-        return database[this.nomeDoModelo].destroy({ where: { id: id } })
+        return database[this.nomeDoModelo].destroy({ where: { id: Number(id) } })
+    }
+
+    async removerRegistros(where){
+        return database[this.nomeDoModelo].destroy({ where: { ...where } })
     }
 }
 

@@ -4,7 +4,7 @@ const database = require('../models')
 class PessoasServices extends Services{
     constructor(){
         super('Pessoas')
-        this.matriculas = new Services('Matriculas')
+        this.matriculasServices = new Services('Matriculas')
     }
     
     // Métodos específicos do controlador de Pessoas
@@ -27,8 +27,12 @@ class PessoasServices extends Services{
     async cancelarPessoaEMatriculas(estudanteId){
         return database.sequelize.transaction(async t => {
             await super.atualizarRegistro({ativo: false}, estudanteId, {transaction: t})
-            await this.matriculas.atualizarRegistros({status: 'cancelado'}, {estudante_id: estudanteId}, {transaction: t})
+            await this.matriculasServices.atualizarRegistros({status: 'cancelado'}, {estudante_id: estudanteId}, {transaction: t})
         })
+    }
+
+    async restaurarRegistro(id){
+        return database[this.nomeDoModelo].restore({where: {id: Number(id)}})
     }
 }
 

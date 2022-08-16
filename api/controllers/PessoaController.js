@@ -120,12 +120,7 @@ class PessoaController {
         let response
 
         try {
-            await database.Pessoas.restore({
-                where: {
-                    id: Number(id)
-                }
-            })
-
+            await pessoasServices.restaurarRegistro(id)
             response = res.status(200).json({ "message:": "Usuário restaurado" })
         } catch (err) {
             response = res.status(500).json(err.message)
@@ -134,115 +129,6 @@ class PessoaController {
         }
     }
 
-    static async pegarUmaMatriculaPorId(req, res) {
-        const { estudanteId, matriculaId } = req.params
-        let response
-
-        try {
-            const matricula = await database.Matriculas.findOne({
-                where: {
-                    id: Number(matriculaId),
-                    estudante_id: Number(estudanteId)
-                }
-            })
-
-            response = res.status(200).json(matricula)
-        } catch (err) {
-            response = res.status(400).json(err.message)
-        } finally {
-            return response
-        }
-
-    }
-
-    static async pegarMatriculasPorPessoa(req, res) {
-        const { estudanteId } = req.params
-        let response
-
-        try {
-            const pessoa = await database.Pessoas.findOne({
-                where: {
-                    id: Number(estudanteId)
-                }
-            })
-            const matriculas = await pessoa.getAulasMatriculadas()
-
-            response = res.status(200).json(matriculas)
-        } catch (err) {
-            response = res.status(400).json(err.message)
-        } finally {
-            return response
-        }
-
-    }
-
-    static async criarMatricula(req, res) {
-        const { estudanteId } = req.params
-        const novaMatricula = {
-            ...req.body,
-            estudante_id: Number(estudanteId),
-            createdAt: Date.now(),
-            updatedAt: Date.now()
-        }
-        let response
-
-        try {
-            const novaMatriculaCriada = await database.Matriculas.create(novaMatricula)
-            response = res.status(200).json(novaMatriculaCriada)
-        } catch (err) {
-            response = res.status(500).json(err.message)
-        } finally {
-            return response
-        }
-
-    }
-
-    static async atualizarMatriculaPorId(req, res) {
-        const { estudanteId, matriculaId } = req.params
-        const atualizacao = { ...req.body, updatedAt: Date.now() }
-        let response
-
-        try {
-            const statusAtualizado = await database.Matriculas.update(atualizacao, {
-                where: {
-                    id: Number(matriculaId),
-                    estudante_id: Number(estudanteId)
-                }
-            })
-
-            if (statusAtualizado == 1) {
-                response = res.status(200).json({ "message": "Cadastro atualizado com sucesso" })
-            } else {
-                response = res.status(400).json({ "message": "Falha ao atualizar cadastro" })
-            }
-
-        } catch (err) {
-            response = res.status(500).json(err.message)
-        } finally {
-            return response
-        }
-    }
-
-    static async removerMatriculaPorId(req, res) {
-        const { estudanteId, matriculaId } = req.params
-        let response
-
-        try {
-            database.Matriculas.destroy({
-                where: {
-                    id: Number(matriculaId),
-                    estudante_id: Number(estudanteId)
-                }
-            })
-
-            response = res.status(200).json({ "message": "Cadastro removido com sucesso" })
-
-        } catch (err) {
-            response = res.status(500).json(err.message)
-        } finally {
-            return response
-        }
-    }
 }
 
 module.exports = PessoaController
